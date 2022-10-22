@@ -114,15 +114,15 @@ let tomatoes = new Upgrade({
   total: 0,
   totalUp: 10,
   costUp: 1.3
-})
-let buttons = {}
-if (evolveNum == 0) multiplier = 7 * (2 ** evolveNum + 1)
-else if (evolveNum > 0) multiplier = 7 * (2 ** evolveNum)
+});
+let buttons = {};
+if (evolveNum == 0) multiplier = 7 * (2 ** evolveNum + 1);
+else if (evolveNum > 0) multiplier = 7 * (2 ** evolveNum);
 
-resetValues()
+resetValues();
 
-let upgrades = [cheese, lettuce, sourCream, meat, avocados, salsa]
-let diamondUpgrades = [tacoYumminess, tomatoes]
+let upgrades = [cheese, lettuce, sourCream, meat, avocados, salsa];
+let diamondUpgrades = [tacoYumminess, tomatoes];
 upgrades.forEach((upgrade) => {
   document.getElementById('upgradeButtons').innerHTML += '<button onclick="' + upgrade.name + '.upgrade()" id="' + upgrade.name + '" class="upgrades"></button>'
   document.getElementById('keyBindsDiv').innerHTML += '<button id="keybinds" onclick="keybinds(\'' + upgrade.name + '\',prompt(\'Rebind ' + capitalizeFirstLetter(upgrade.name) + ' to:\').toLowerCase())" class="gray">Change Key Bind for ' + capitalizeFirstLetter(upgrade.name) + '</button><br>'

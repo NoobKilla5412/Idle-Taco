@@ -1,6 +1,14 @@
+/**
+ * capitalize the first letter of ``string``.
+ * @param {*} string String to capitalize
+ * @returns string with first letter capitalized
+ */
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
+/**
+ * Reset the cost, num, and total of the upgrades.
+ */
 function resetValues() {
   cheese.cost = multiplier * 20
   cheese.num = 0
@@ -21,11 +29,17 @@ function resetValues() {
   salsa.num = 0
   salsa.total = 1
 }
+/**
+ * Test if the evolve count is not at 100
+ */
 function evolve() {
-  if (evolveNum <= 100) {
+  if (evolveNum < 100) {
     newEvolve()
   }
 }
+/**
+ * Increase the evolve count
+ */
 function newEvolve() {
   if (displayMoneyRate >= moneyPerSecNextEvolve) {
     multiplier = 7 * (2 ** evolveNum + 2)
@@ -45,6 +59,9 @@ function newEvolve() {
     resetValues()
   }
 }
+/**
+ * Start the game
+ */
 function startGame() {
   document.getElementById('start').style.display = 'none'
   document.getElementById('load').style.display = 'none'
@@ -67,10 +84,17 @@ function startGame() {
   setInterval(save, 2500)
   console.log('Loaded')
 }
+/**
+ * Every interval
+ * @param {*} n The interval
+ */
 function everyInterval(n) {
   if ((frameNo / n) % 1 == 0) { return true }
   return false
 }
+/**
+ * Toggle the info menu
+ */
 function info() {
   if (!infoActive) {
     document.getElementById('info').style.display = 'block'
@@ -80,6 +104,9 @@ function info() {
     infoActive = false
   }
 }
+/**
+ * Toggle the options menu
+ */
 function options() {
   if (!optionsActive) {
     document.getElementById('options').style.display = 'block'
@@ -89,6 +116,11 @@ function options() {
     optionsActive = false
   }
 }
+/**
+ * Change keybinds
+ * @param {*} bind The keybind to change
+ * @param {*} newKey The new key to change ``bind`` to
+ */
 function keybinds(bind, newKey) {
   // console.log('bind: ' + bind)
   // console.log('newKey: ' + newKey)
@@ -135,6 +167,9 @@ function keybinds(bind, newKey) {
     console.error('Error: Key already bound')
   }
 }
+/**
+ * Add money for clicking on the Taco
+ */
 function clickTaco() {
   if (clickTacoTimer == 0) {
     money += (Math.round(10000 * moneyValue) / 100) * 5
@@ -142,6 +177,9 @@ function clickTaco() {
     clickSound.play()
   }
 }
+/**
+ * Save the game
+ */
 function save() {
   localStorage.setItem('money', money)
   localStorage.setItem('diamonds', diamonds)
@@ -197,6 +235,9 @@ function save() {
 
   console.log('Saved')
 }
+/**
+ * Load from save
+ */
 function load() {
   money = parseFloat(localStorage.getItem('money'))
   diamonds = parseFloat(localStorage.getItem('diamonds'))
