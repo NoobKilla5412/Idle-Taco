@@ -1,3 +1,6 @@
+/**
+ * The upgrade class for making new upgrades
+ */
 class Upgrade {
   constructor({ name, type, action = '+', max, cost, num, total, totalUp, costUp }) {
     this.name = name
@@ -16,6 +19,9 @@ class Upgrade {
       class: 'upgrades',
     }
   }
+  /**
+   * Upgrade ``this``
+   */
   upgrade() {
     if (this.type == 'money') {
       switch (this.action) {
@@ -60,6 +66,9 @@ class Upgrade {
       }
     }
   }
+  /**
+   * Change the color to green if you can buy it
+   */
   color() {
     if (this.type == 'money') {
       if (money >= Math.floor(this.cost) && this.num != this.max) {
@@ -75,6 +84,9 @@ class Upgrade {
       }
     }
   }
+  /**
+   * Change the text on the button
+   */
   message() {
     if (this.num != this.max) {
       document.getElementById(this.name).innerHTML = buttons[this.name]
