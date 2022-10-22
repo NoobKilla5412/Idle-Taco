@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taco Game</title>
+    <style>
+        b {
+            font-size: 1rem;
+        }
+
+        #credits,
+        #info,
+        #stats {
+            display: none;
+        }
+
+        #stats {
+            margin-left: 25%;
+        }
+
+        button {
+            background-color: gray;
+            border-radius: .3rem;
+        }
+
+        button.upgrades {
+            display: none;
+            width: 350px;
+            height: 100px;
+        }
+
+        .green {
+            background-color: green;
+            color: white;
+        }
+
+        .green:hover {
+            background-color: lightgreen;
+            color: black;
+        }
+
+        .gray {
+            background-color: gray;
+            color: black;
+        }
+
+        .gray:hover {
+            background-color: lightgray;
+        }
+
+        .blue {
+            background-color: lightblue;
+            color: black;
+        }
+
+        .blue:hover {
+            background-color: #e9f5f8;
+            color: black;
+        }
+
+        .large-money {
+            font-size: 1.5rem;
+        }
+
+        #start {
+            width: 400px;
+            height: 200px;
+            font-size: 100pt;
+            background-color: green;
+            color: white;
+        }
+
+        #start:hover {
+            background-color: lightgreen;
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="https://png.pngtree.com/png-vector/20190927/ourlarge/pngtree-taco-vector-illustration-isolated-on-white-background-taco-clip-art-png-image_1745821.jpg"
+        style="float:right" width="25%" onclick="clickTaco()">
+    <p id="clickTacoTimer" style="float: right;"></p>
+    <div id="stats">
+        Stats:
+        <p id="money"></p>
+        <p id="moneyPerSec"></p>
+        <p id="diamonds"></p>
+        <p id="evolve"></p>
+        <p id="idle"></p>
+    </div>
+    <button onclick="startGame()" id="start" class="gray">Start</button>
+    <script>
+        let multiplier = 15;
+        let keys = [];
+        let idle = false;
+
+        let cheeseCost = 20;
+        let cheeseNum = 0;
+        let cheeseTotal = 0;
+        let lettuceCost = 30;
+        let lettuceNum = 0;
+        let lettuceTotal = 0;
+        let sourCreamCost = 10;
+        let sourCreamNum = 0;
+        let sourCreamTotal = 0;
+        let meatCost = 2500;
+        let meatNum = 0;
+        let meatTotal = 1;
+        let tacoYumminessCost = 500 * 2;
+        let tacoYumminessNum = 0;
+        let tacoYumminessTotal = 0;
+        let tomatoesCost = 300 * 2;
+        let tomatoesNum = 0;
+        let tomatoesTotal = 0;
+
+        let frameNo = 0;
+        let clickTacoTimer = 0
+        let money = 0;
+        let diamonds = 0;
+        let moneyRate = 1;
+        let diamondRate = 0.005
+        let moneyValue = 0.05 + (cheeseTotal / 100) * (lettuceTotal / 100) * (sourCreamTotal / 100) * meatTotal * (tomatoesTotal / 100);
+        let diamondValue = 0.0005;
+        let evolveNum = 0;
+        let moneyPerSecNextEvolveDisplay = '4K';
+        let moneyPerSecNextEvolve = 4000;
+
+        function resetValues() {
+            cheeseCost = 20 * multiplier;
+            cheeseNum = 0;
+            cheeseTotal = 0;
+            lettuceCost = 30 * multiplier;
+            lettuceNum = 0;
+            lettuceTotal = 0;
+            sourCreamCost = 10 * multiplier;
+            sourCreamNum = 0;
+            sourCreamTotal = 0;
+            meatCost = 2500 * multiplier;
+            meatNum = 0;
+            meatTotal = 1;
+        }
+        resetValues();
+        function cheese() {
+            if (money >= Math.floor(cheeseCost) && moneyRate != 10 && cheeseNum != 10) {
+                money -= Math.floor(cheeseCost);
+                cheeseCost *= 1.5;
+                cheeseNum++;
+                cheeseTotal += 10;
+            }
+        }
+        function lettuce() {
+            if (money >= Math.floor(lettuceCost) && lettuceNum != 30) {
+                money -= Math.floor(lettuceCost);
+                lettuceCost *= 1.4;
+                lettuceNum++;
+                lettuceTotal += 15;
+            }
+        }
+        function sourCream() {
+            if (money >= Math.floor(sourCreamCost) && sourCreamNum != 50) {
+                money -= Math.floor(sourCreamCost);
+                sourCreamCost *= 1.3;
+                sourCreamNum++;
+                sourCreamTotal += 1;
+            }
+        }
+        function meat() {
+            if (money >= Math.floor(meatCost) && meatNum != 2) {
+                money -= Math.floor(meatCost);
+                meatCost *= 3;
+                meatNum++;
+                meatTotal *= 2;
+            }
+        }
+
+        function tacoYumminess() {
+            if (diamonds >= Math.floor(tacoYumminessCost) && tacoYumminessNum != 100) {
+                diamonds -= Math.floor(tacoYumminessCost);
+                tacoYumminessCost *= 1.3;
+                tacoYumminessNum++;
+                tacoYumminessTotal += 5;
+            }
+        }
+        function tomatoes() {
+            if (diamonds >= Math.floor(tomatoesCost) && tomatoesNum != 100) {
+                diamonds -= Math.floor(tomatoesCost);
+                tomatoesCost *= 1.3;
+                tomatoesNum++;
+                tomatoesTotal += 10;
+            }
+        }
+
+        function evolve() {
+            if (evolveNum == 0) {
+                evolve1();
+            } else if (evolveNum == 1) {
+                evolve2();
+            } else if (evolveNum == 2) {
+                evolve3();
+            } else if (evolveNum == 3) {
+                evolve4();
+            } else if (evolveNum == 4) {
+                evolve5();
+            } else if (evolveNum == 5) {
+                evolve6();
+            } else if (evolveNum == 6) {
+                evolve7();
+            } else if (evolveNum == 7) {
+                evolve8();
+            } else if (evolveNum == 8) {
+                evolve9();
+            } else if (evolveNum == 9) {
+                evolve10();
+            }
+        }
+
+        function evolve1() {
+            if ((Math.round(10000 * moneyValue) / 100) >= 2000 * 2) {
+                moneyValue = .10;
+                resetValues();
+                multiplier = 15;
+                moneyPerSecNextEvolve = 4000 * 2;
+                moneyPerSecNextEvolveDisplay = '8K';
+
+                money = 0;
+                frameNo = 0;
+
+                evolveNum = 1;
+            }
+        }
+        function evolve2() {
+            if ((Math.round(10000 * moneyValue) / 100) >= 4000 * 2) {
+                moneyValue = .20;
+                resetValues();
+                multiplier = 15 * 2 * 2;
+                moneyPerSecNextEvolve = 8000 * 2;
+                moneyPerSecNextEvolveDisplay = '16K';
+
+                money = 0;
+                frameNo = 0;
+
+                evolveNum = 2;
+            }
+        }
+        function evolve3() {
+            if ((Math.round(10000 * moneyValue) / 100) >= 8000 * 2) {
+                moneyValue = .30;
+                resetValues();
+                multiplier = 15 * 4 * 2;
+                moneyPerSecNextEvolve = 16000 * 2;
+                moneyPerSecNextEvolveDisplay = '32K';
+
+                money = 0;
+                frameNo = 0;
+
+                evolveNum = 3;
+            }
+        }
+        function evolve4() {
+            if ((Math.round(10000 * moneyValue) / 100) >= 16000 * 2) {
+                moneyValue = .40;
+                resetValues();
+                multiplier = 15 * 8 * 2;
+                moneyPerSecNextEvolve = 32000 * 2;
+                moneyPerSecNextEvolveDisplay = '64K';
+
+                money = 0;
+                frameNo = 0;
+
+                evolveNum = 4;
+            }
+        }
+        function evolve5() {
+            if ((Math.round(10000 * moneyValue) / 100) >= 32000 * 2) {
+                resetValues();
+                multiplier = 15 * 16 * 2;
+                moneyPerSecNextEvolve = 64000 * 2;
+                moneyPerSecNextEvolveDisplay = '128K';
+
+                money = 0;
+                frameNo = 0;
+
+                evolveNum = 5;
+            }
+        }
+        function evolve6() {
+            if ((Math.round(10000 * moneyValue) / 100) >= 64000 * 2) {
+                resetValues();
+                multiplier = 15 * 32 * 2;
+                moneyPerSecNextEvolve = 128000 * 2;
+                moneyPerSecNextEvolveDisplay = '256K';
+
+                money = 0;
+                frameNo = 0;
+
+                evolveNum = 6;
+            }
+        }
+        function evolve7() {
+            if ((Math.round(10000 * moneyValue) / 100) >= 128000 * 2) {
+                resetValues();
+                multiplier = 15 * 64 * 2;
+                moneyPerSecNextEvolve = 256000 * 2;
+                moneyPerSecNextEvolveDisplay = '512K';
+
+                money = 0;
+                frameNo = 0;
+
+                evolveNum = 7;
+            }
+        }
+        function evolve8() {
+            if ((Math.round(10000 * moneyValue) / 100) >= 256000 * 2) {
+                resetValues();
+                multiplier = 15 * 128 * 2;
+                moneyPerSecNextEvolve = 512000 * 2;
+                moneyPerSecNextEvolveDisplay = '1.028B'
+
+                money = 0;
+                frameNo = 0;
+
+                evolveNum = 8;
+            }
+        }
+        function evolve9() {
+            if ((Math.round(10000 * moneyValue) / 100) >= 512000 * 2) {
+                resetValues();
+                multiplier = 15 * 256 * 2;
+                moneyPerSecNextEvolve = 1024000 * 2;
+                moneyPerSecNextEvolveDisplay = '2.048B'
+
+                money = 0;
+                frameNo = 0;
+
+                evolveNum = 9;
+            }
+        }
+        function evolve10() {
+            if ((Math.round(10000 * moneyValue) / 100) >= 1024000 * 2) {
+                resetValues();
+                multiplier = 15 * 512 * 2;
+                moneyPerSecNextEvolveDisplay = 'MAX';
+
+                money = 0;
+                frameNo = 0;
+
+                evolveNum = 10;
+            }
+        }
+
+        function startGame() {
+            document.getElementById('start').style.display = 'none';
+            document.getElementById('stats').style.display = 'block';
+            for (let i = 0; i <= 5; i++) {
+                document.getElementsByClassName('upgrades')[i].style.display = 'inline';
+            }
+            setInterval(updateGameArea, 10);
+
+            window.addEventListener('keydown', function (e) {
+                keys = (keys || [])
+                keys[e.keyCode] = true;
+            })
+            window.addEventListener('keyup', function (e) {
+                keys[e.keyCode] = false;
+            })
+
+            console.log('Loaded');
+        }
+
+        function updateGameArea() {
+            frameNo += 1;
+            if (clickTacoTimer != 0) {
+                clickTacoTimer--;
+            }
+            document.getElementById('clickTacoTimer').innerText = Math.round(clickTacoTimer / 100);
+
+            if (evolveNum == 0) {
+                moneyValue = (cheeseTotal / 100 + 1) * (lettuceTotal / 100 + 1) * (sourCreamTotal / 100 + 1) * meatTotal * (tomatoesTotal / 100 + 1);
+                diamondValue = (tacoYumminessTotal / 100 + 1) - 0.7;
+                if ((Math.round(10000 * moneyValue) / 100) >= 2000 * 2) {
+                    document.getElementById('evolveButton').classList = 'green';
+                } else {
+                    document.getElementById('evolveButton').classList = 'gray';
+                }
+            } else if (evolveNum == 1) {
+                moneyValue = 2 * (cheeseTotal / 100 + 1) * (lettuceTotal / 100 + 1) * (sourCreamTotal / 100 + 1) * meatTotal * (tomatoesTotal / 100 + 1);
+                diamondValue = 2 * (tacoYumminessTotal / 100 + 1) - 0.7;
+                if ((Math.round(10000 * moneyValue) / 100) >= 4000 * 2) {
+                    document.getElementById('evolveButton').classList = 'green';
+                } else {
+                    document.getElementById('evolveButton').classList = 'gray';
+                }
+            } else if (evolveNum == 2) {
+                moneyValue = 4 * (cheeseTotal / 100 + 1) * (lettuceTotal / 100 + 1) * (sourCreamTotal / 100 + 1) * meatTotal * (tomatoesTotal / 100 + 1);
+                diamondValue = 4 * (tacoYumminessTotal / 100 + 1) - 0.7;
+                if ((Math.round(10000 * moneyValue) / 100) >= 8000 * 2) {
+                    document.getElementById('evolveButton').classList = 'green';
+                } else {
+                    document.getElementById('evolveButton').classList = 'gray';
+                }
+            } else if (evolveNum == 3) {
+                moneyValue = 8 * (cheeseTotal / 100 + 1) * (lettuceTotal / 100 + 1) * (sourCreamTotal / 100 + 1) * meatTotal * (tomatoesTotal / 100 + 1);
+                diamondValue = 8 * (tacoYumminessTotal / 100 + 1) - 0.7;
+                if ((Math.round(10000 * moneyValue) / 100) >= 16000 * 2) {
+                    document.getElementById('evolveButton').classList = 'green';
+                } else {
+                    document.getElementById('evolveButton').classList = 'gray';
+                }
+            } else if (evolveNum == 4) {
+                moneyValue = 16 * (cheeseTotal / 100 + 1) * (lettuceTotal / 100 + 1) * (sourCreamTotal / 100 + 1) * meatTotal * (tomatoesTotal / 100 + 1);
+                diamondValue = 16 * (tacoYumminessTotal / 100 + 1) - 0.7;
+                if ((Math.round(10000 * moneyValue) / 100) >= 32000 * 2) {
+                    document.getElementById('evolveButton').classList = 'green';
+                } else {
+                    document.getElementById('evolveButton').classList = 'gray';
+                }
+            } else if (evolveNum == 5) {
+                moneyValue = 64 * (cheeseTotal / 100 + 1) * (lettuceTotal / 100 + 1) * (sourCreamTotal / 100 + 1) * meatTotal * (tomatoesTotal / 100 + 1);
+                diamondValue = 64 * (tacoYumminessTotal / 100 + 1) - 0.7;
+                if ((Math.round(10000 * moneyValue) / 100) >= 64000 * 2) {
+                    document.getElementById('evolveButton').classList = 'green';
+                } else {
+                    document.getElementById('evolveButton').classList = 'gray';
+                }
+            } else if (evolveNum == 6) {
+                moneyValue = 128 * (cheeseTotal / 100 + 1) * (lettuceTotal / 100 + 1) * (sourCreamTotal / 100 + 1) * meatTotal * (tomatoesTotal / 100 + 1);
+                diamondValue = 128 * (tacoYumminessTotal / 100 + 1) - 0.7;
+                if ((Math.round(10000 * moneyValue) / 100) >= 128000 * 2) {
+                    document.getElementById('evolveButton').classList = 'green';
+                } else {
+                    document.getElementById('evolveButton').classList = 'gray';
+                }
+            } else if (evolveNum == 7) {
+                moneyValue = 256 * (cheeseTotal / 100 + 1) * (lettuceTotal / 100 + 1) * (sourCreamTotal / 100 + 1) * meatTotal * (tomatoesTotal / 100 + 1);
+                diamondValue = 256 * (tacoYumminessTotal / 100 + 1) - 0.7;
+                if ((Math.round(10000 * moneyValue) / 100) >= 256000 * 2) {
+                    document.getElementById('evolveButton').classList = 'green';
+                } else {
+                    document.getElementById('evolveButton').classList = 'gray';
+                }
+            } else if (evolveNum == 8) {
+                moneyValue = 512 * (cheeseTotal / 100 + 1) * (lettuceTotal / 100 + 1) * (sourCreamTotal / 100 + 1) * meatTotal * (tomatoesTotal / 100 + 1);
+                diamondValue = 512 * (tacoYumminessTotal / 100 + 1) - 0.7;
+                if ((Math.round(10000 * moneyValue) / 100) >= 512000 * 2) {
+                    document.getElementById('evolveButton').classList = 'green';
+                } else {
+                    document.getElementById('evolveButton').classList = 'gray';
+                }
+            } else if (evolveNum == 9) {
+                moneyValue = 1024 * (cheeseTotal / 100 + 1) * (lettuceTotal / 100 + 1) * (sourCreamTotal / 100 + 1) * meatTotal * (tomatoesTotal / 100 + 1);
+                diamondValue = 1024 * (tacoYumminessTotal / 100 + 1) - 0.7;
+                if ((Math.round(10000 * moneyValue) / 100) >= 1024000 * 2) {
+                    document.getElementById('evolveButton').classList = 'green';
+                } else {
+                    document.getElementById('evolveButton').classList = 'gray';
+                }
+            } else if (evolveNum == 10) {
+                moneyValue = 2048 * (cheeseTotal / 100 + 1) * (lettuceTotal / 100 + 1) * (sourCreamTotal / 100 + 1) * meatTotal * (tomatoesTotal / 100 + 1);
+                diamondValue = 2048 * (tacoYumminessTotal / 100 + 1) - 0.7;
+                document.getElementById('evolveButton').classList = 'gray';
+            }
+
+            if (money >= Math.floor(cheeseCost) && cheeseNum != 10) {
+                document.getElementById('cheese').classList = 'green upgrades';
+            } else {
+                document.getElementById('cheese').classList = 'gray upgrades';
+            }
+            if (money >= Math.floor(lettuceCost) && lettuceNum != 30) {
+                document.getElementById('lettuce').classList = 'green upgrades';
+            } else {
+                document.getElementById('lettuce').classList = 'gray upgrades';
+            }
+            if (money >= Math.floor(sourCreamCost) && sourCreamNum != 50) {
+                document.getElementById('sourCream').classList = 'green upgrades';
+            } else {
+                document.getElementById('sourCream').classList = 'gray upgrades';
+            }
+            if (money >= Math.floor(meatCost) && meatNum != 2) {
+                document.getElementById('meat').classList = 'green upgrades';
+            } else {
+                document.getElementById('meat').classList = 'gray upgrades';
+            }
+            if (diamonds >= Math.floor(tacoYumminessCost) && tacoYumminessNum != 100) {
+                document.getElementById('tacoYumminess').classList = 'blue upgrades';
+            } else {
+                document.getElementById('tacoYumminess').classList = 'gray upgrades';
+            }
+            if (diamonds >= Math.floor(tomatoesCost) && tomatoesNum != 100) {
+                document.getElementById('tomatoes').classList = 'blue upgrades';
+            } else {
+                document.getElementById('tomatoes').classList = 'gray upgrades';
+            }
+
+            if (Math.round(10000 * moneyValue) / 100 == 148684800) {
+                document.body.innerHTML = '<h1>You won!!!</h1><br><a href="javascript:location.reload()">Restart</a>'
+            }
+
+
+            if (cheeseNum != 10) {
+                if (cheeseCost >= 1000000) {
+                    document.getElementById('cheese').innerHTML = 'Cheese (1): Increase Size by 10% <span title="Size upgrades are the same as Earnings upgrades in their effect.">[ ? ]</span><br><img src="money.png" height="12pt" /><b>' + Math.round(100 * (cheeseCost / 1000000)) / 100 + 'M</b><br>Total: ' + cheeseTotal + '%<br>Level: ' + cheeseNum + '/10';
+                } else if (cheeseCost >= 1000) {
+                    document.getElementById('cheese').innerHTML = 'Cheese (1): Increase Size by 10% <span title="Size upgrades are the same as Earnings upgrades in their effect.">[ ? ]</span><br><img src="money.png" height="12pt" /><b>' + Math.round(100 * (cheeseCost / 1000)) / 100 + 'K</b><br>Total: ' + cheeseTotal + '%<br>Level: ' + cheeseNum + '/10';
+                } else {
+                    document.getElementById('cheese').innerHTML = 'Cheese (1): Increase Size by 10% <span title="Size upgrades are the same as Earnings upgrades in their effect.">[ ? ]</span><br><img src="money.png" height="12pt" /><b>' + Math.round(100 * cheeseCost) / 100 + '</b><br>Total: ' + cheeseTotal + '%<br>Level: ' + cheeseNum + '/10';
+                }
+            } else {
+                document.getElementById('cheese').innerHTML = 'Cheese (1): Increase Size by 10%<br>✅<br>Total: ' + cheeseTotal + '%<br>Level: MAX';
+            }
+            if (lettuceNum != 30) {
+                if (lettuceCost >= 1000000000) {
+                    document.getElementById('lettuce').innerHTML = 'Lettuce (2): Increase Tastiness by 15% <span title="Tastiness upgrades are the same as Earnings upgrades in their effect.">[ ? ]</span><br><img src="money.png" height="12pt" /><b>' + Math.floor(100 * (lettuceCost / 1000000000)) / 100 + 'B</b><br>Total: ' + lettuceTotal + '%<br>Level: ' + lettuceNum + '/30';
+                } else if (lettuceCost >= 1000000) {
+                    document.getElementById('lettuce').innerHTML = 'Lettuce (2): Increase Tastiness by 15% <span title="Tastiness upgrades are the same as Earnings upgrades in their effect.">[ ? ]</span><br><img src="money.png" height="12pt" /><b>' + Math.floor(100 * (lettuceCost / 1000000)) / 100 + 'M</b><br>Total: ' + lettuceTotal + '%<br>Level: ' + lettuceNum + '/30';
+                } else if (lettuceCost >= 1000) {
+                    document.getElementById('lettuce').innerHTML = 'Lettuce (2): Increase Tastiness by 15% <span title="Tastiness upgrades are the same as Earnings upgrades in their effect.">[ ? ]</span><br><img src="money.png" height="12pt" /><b>' + Math.floor(100 * (lettuceCost / 1000)) / 100 + 'K</b><br>Total: ' + lettuceTotal + '%<br>Level: ' + lettuceNum + '/30';
+                } else {
+                    document.getElementById('lettuce').innerHTML = 'Lettuce (2): Increase Tastiness by 15% <span title="Tastiness upgrades are the same as Earnings upgrades in their effect.">[ ? ]</span><br><img src="money.png" height="12pt" /><b>' + Math.floor(100 * lettuceCost) / 100 + '</b><br>Total: ' + lettuceTotal + '%<br>Level: ' + lettuceNum + '/30';
+                }
+            } else {
+                document.getElementById('lettuce').innerHTML = 'Lettuce (2): Increase Tastiness by 15% <span title="Tastiness upgrades are the same as Earnings upgrades in their effect.">[ ? ]</span><br>✅<br>Total: ' + lettuceTotal + '%<br>Level: MAX';
+            }
+            if (sourCreamNum != 50) {
+                if (sourCreamCost >= 1000000000) {
+                    document.getElementById('sourCream').innerHTML = 'Sour Cream (3): Increase Earnings by 1%<br><img src="money.png" height="12pt" /><b>' + Math.floor(100 * (sourCreamCost / 1000000000)) / 100 + 'B</b><br>Total: ' + sourCreamTotal + '%<br>Level: ' + sourCreamNum + '/50';
+                } else if (sourCreamCost >= 1000000) {
+                    document.getElementById('sourCream').innerHTML = 'Sour Cream (3): Increase Earnings by 1%<br><img src="money.png" height="12pt" /><b>' + Math.floor(100 * (sourCreamCost / 1000000)) / 100 + 'M</b><br>Total: ' + sourCreamTotal + '%<br>Level: ' + sourCreamNum + '/50';
+                } else if (sourCreamCost >= 1000) {
+                    document.getElementById('sourCream').innerHTML = 'Sour Cream (3): Increase Earnings by 1%<br><img src="money.png" height="12pt" /><b>' + Math.floor(100 * (sourCreamCost / 1000)) / 100 + 'K</b><br>Total: ' + sourCreamTotal + '%<br>Level: ' + sourCreamNum + '/50';
+                } else {
+                    document.getElementById('sourCream').innerHTML = 'Sour Cream (3): Increase Earnings by 1%<br><img src="money.png" height="12pt" /><b>' + Math.floor(100 * sourCreamCost) / 100 + '</b><br>Total: ' + sourCreamTotal + '%<br>Level: ' + sourCreamNum + '/50';
+                }
+            } else {
+                document.getElementById('sourCream').innerHTML = 'Sour Cream (3): Increase Earnings by 1%<br>✅<br>Total: ' + sourCreamTotal + '%<br>Level: MAX';
+            }
+            if (meatNum != 2) {
+                if (meatCost >= 1000000000) {
+                    document.getElementById('meat').innerHTML = 'Taco Meat (4): Double Meat <span title="Meat upgrades are the same as Earnings upgrades in their effect.">[ ? ]</span><br><img src="money.png" height="12pt" /><b>' + Math.floor(100 * (meatCost / 1000000000)) / 100 + 'B</b><br>Total: ' + meatTotal + 'x<br>Level: ' + meatNum + '/2';
+                } else if (meatCost >= 1000000) {
+                    document.getElementById('meat').innerHTML = 'Taco Meat (4): Double Meat <span title="Meat upgrades are the same as Earnings upgrades in their effect.">[ ? ]</span><br><img src="money.png" height="12pt" /><b>' + Math.floor(100 * (meatCost / 1000000)) / 100 + 'M</b><br>Total: ' + meatTotal + 'x<br>Level: ' + meatNum + '/2';
+                } else if (meatCost >= 1000) {
+                    document.getElementById('meat').innerHTML = 'Taco Meat (4): Double Meat <span title="Meat upgrades are the same as Earnings upgrades in their effect.">[ ? ]</span><br><img src="money.png" height="12pt" /><b>' + Math.floor(100 * (meatCost / 1000)) / 100 + 'K</b><br>Total: ' + meatTotal + 'x<br>Level: ' + meatNum + '/2';
+                } else {
+                    document.getElementById('meat').innerHTML = 'Taco Meat (4): Double Meat <span title="Meat upgrades are the same as Earnings upgrades in their effect.">[ ? ]</span><br><img src="money.png" height="12pt" /><b>' + Math.floor(100 * meatCost) / 100 + '</b><br>Total: ' + meatTotal + 'x<br>Level: ' + meatNum + '/2';
+                }
+            } else {
+                document.getElementById('meat').innerHTML = 'Taco Meat (4): Double Meat <span title="Meat upgrades are the same as Earnings upgrades in their effect.">[ ? ]</span><br>✅<br>Total: ' + meatTotal + 'x<br>Level: MAX';
+            }
+            if (tacoYumminessNum != 100) {
+                if (tacoYumminessCost >= 1000000000) {
+                    document.getElementById('tacoYumminess').innerHTML = 'Taco Yumminess (N): Increase Diamond Speed by 5%<br>💎<b>' + Math.round(100 * (tacoYumminessCost / 1000000000)) / 100 + 'B</b><br>Total: ' + tacoYumminessTotal + '%<br>Level: ' + tacoYumminessNum + '/100';
+                } else if (tacoYumminessCost >= 1000000) {
+                    document.getElementById('tacoYumminess').innerHTML = 'Taco Yumminess (N): Increase Diamond Speed by 5%<br>💎<b>' + Math.round(100 * (tacoYumminessCost / 1000000)) / 100 + 'M</b><br>Total: ' + tacoYumminessTotal + '%<br>Level: ' + tacoYumminessNum + '/100';
+                } else if (tacoYumminessCost >= 1000) {
+                    document.getElementById('tacoYumminess').innerHTML = 'Taco Yumminess (N): Increase Diamond Speed by 5%<br>💎<b>' + Math.round(100 * (tacoYumminessCost / 1000)) / 100 + 'K</b><br>Total: ' + tacoYumminessTotal + '%<br>Level: ' + tacoYumminessNum + '/100';
+                } else {
+                    document.getElementById('tacoYumminess').innerHTML = 'Taco Yumminess (N): Increase Diamond Speed by 5%<br>💎<b>' + Math.round(100 * tacoYumminessCost) / 100 + '</b><br>Total: ' + tacoYumminessTotal + '%<br>Level: ' + tacoYumminessNum + '/100';
+                }
+
+            } else {
+                document.getElementById('tacoYumminess').innerHTML = 'Taco Yumminess: Increase Diamond Speed by 5%<br>✅<br>Total: ' + tacoYumminessTotal + '%<br>Level: MAX';
+            }
+            if (tomatoesNum != 100) {
+                if (tomatoesCost >= 1000000000) {
+                    document.getElementById('tomatoes').innerHTML = 'Tomatoes (M): Increase Flavor by 10% <span title="Flavor upgrades are the same as Earnings upgrades in their effect.">[ ? ]</span><br>💎<b>' + Math.floor(100 * (tomatoesCost / 1000000000)) / 100 + 'B</b><br>Total: ' + tomatoesTotal + '%<br>Level: ' + tomatoesNum + '/100';
+                } else if (tomatoesCost >= 1000000) {
+                    document.getElementById('tomatoes').innerHTML = 'Tomatoes (M): Increase Flavor by 10% <span title="Flavor upgrades are the same as Earnings upgrades in their effect.">[ ? ]</span><br>💎<b>' + Math.floor(100 * (tomatoesCost / 1000000)) / 100 + 'M</b><br>Total: ' + tomatoesTotal + '%<br>Level: ' + tomatoesNum + '/100';
+                } else if (tomatoesCost >= 1000) {
+                    document.getElementById('tomatoes').innerHTML = 'Tomatoes (M): Increase Flavor by 10% <span title="Flavor upgrades are the same as Earnings upgrades in their effect.">[ ? ]</span><br>💎<b>' + Math.floor(100 * (tomatoesCost / 1000)) / 100 + 'K</b><br>Total: ' + tomatoesTotal + '%<br>Level: ' + tomatoesNum + '/100';
+                } else {
+                    document.getElementById('tomatoes').innerHTML = 'Tomatoes (M): Increase Flavor by 10% <span title="Flavor upgrades are the same as Earnings upgrades in their effect.">[ ? ]</span><br>💎<b>' + Math.floor(100 * tomatoesCost) / 100 + '</b><br>Total: ' + tomatoesTotal + '%<br>Level: ' + tomatoesNum + '/100';
+                }
+
+            } else {
+                document.getElementById('tomatoes').innerHTML = 'Tomatoes: Increase Flavor by 10% <span title="Flavor upgrades are the same as Earnings upgrades in their effect.">[ ? ]</span><br>✅<br>Total: ' + tomatoesTotal + '%<br>Level: MAX';
+            }
+
+            if ((Math.round(100 * money) / 100) >= 1000000000) {
+                document.getElementById('money').innerHTML = '<img src="money.png" height="12pt" />: <b class="large-money">' + (Math.round(100 * (money / 1000000000)) / 100) + ' Billion</b>';
+            } else if ((Math.round(100 * money) / 100) >= 1000000) {
+                document.getElementById('money').innerHTML = '<img src="money.png" height="12pt" />: <b class="large-money">' + (Math.round(100 * (money / 1000000)) / 100) + ' Million</b>';
+            } else if ((Math.round(100 * money) / 100) >= 1000) {
+                document.getElementById('money').innerHTML = '<img src="money.png" height="12pt" />: <b class="large-money">' + (Math.round(100 * money / 1000) / 100) + ' Thousand</b>';
+            } else {
+                document.getElementById('money').innerHTML = '<img src="money.png" height="12pt" />: <b class="large-money">' + (Math.round(100 * money) / 100) + '</b>';
+            }
+
+            if (Math.round(10000 * moneyValue) / 100 >= 1000000000) {
+                document.getElementById('moneyPerSec').innerHTML = '<img src="money.png" height="12pt" />/sec: <b>' + Math.round(10 * (10000 * (moneyValue / 1000000000))) / 1000 + 'B/' + moneyPerSecNextEvolveDisplay + '</b>';
+            } else if (Math.round(10000 * moneyValue) / 100 >= 1000000) {
+                document.getElementById('moneyPerSec').innerHTML = '<img src="money.png" height="12pt" />/sec: <b>' + Math.round(10 * (10000 * (moneyValue / 1000000))) / 1000 + 'M/' + moneyPerSecNextEvolveDisplay + '</b>';
+            } else if (Math.round(10000 * moneyValue) / 100 >= 1000) {
+                document.getElementById('moneyPerSec').innerHTML = '<img src="money.png" height="12pt" />/sec: <b>' + Math.round(10 * (10000 * (moneyValue / 1000))) / 1000 + 'K/' + moneyPerSecNextEvolveDisplay + '</b>';
+            } else {
+                document.getElementById('moneyPerSec').innerHTML = '<img src="money.png" height="12pt" />/sec: <b>' + Math.round(10 * (10000 * moneyValue)) / 1000 + '/' + moneyPerSecNextEvolveDisplay + '</b>';
+            }
+
+            if ((Math.round(100 * diamonds) / 100) >= 1000000000) {
+                document.getElementById('diamonds').innerHTML = '💎: <b>' + Math.round(100 * diamonds / 1000000000) / 100 + ' Billion</b>';
+            } else if ((Math.round(100 * diamonds) / 100) >= 1000000) {
+                document.getElementById('diamonds').innerHTML = '💎: <b>' + Math.round(100 * diamonds / 1000000) / 100 + ' Million</b>';
+            } else if ((Math.round(100 * diamonds) / 100) >= 1000) {
+                document.getElementById('diamonds').innerHTML = '💎: <b>' + Math.round(100 * diamonds / 1000) / 100 + ' Thousand</b>';
+            } else {
+                document.getElementById('diamonds').innerHTML = '💎: <b>' + Math.round(100 * diamonds) / 100 + '</b>';
+            }
+
+
+            document.getElementById('evolve').innerHTML = 'Evolve: <b>' + evolveNum + '</b>';
+
+            if (everyInterval(moneyRate)) {
+                money += moneyValue;
+            }
+            if (everyInterval(diamondRate)) {
+                diamonds += diamondValue;
+            }
+
+            if (keys && keys[49]) { // 1
+                cheese();
+            }
+            if (keys && keys[50]) { // 2
+                lettuce();
+            }
+            if (keys && keys[51]) { // 3
+                sourCream();
+            }
+            if (keys && keys[52]) { // 4
+                meat();
+            }
+            if (keys && keys[78]) { // n
+                tacoYumminess();
+            }
+            if (keys && keys[77]) { // m
+                tomatoes();
+            }
+            if (keys && keys[69]) { // e
+                evolve();
+            }
+        }
+        function everyInterval(n) {
+            if ((frameNo / n) % 1 == 0) { return true; }
+            return false;
+        }
+        let creditsActive = false;
+        function credits() {
+            if (!creditsActive) {
+                document.getElementById('credits').style.display = 'block';
+                creditsActive = true;
+            } else if (creditsActive) {
+                document.getElementById('credits').style.display = 'none';
+                creditsActive = false;
+            }
+        }
+        let infoActive = false;
+        function info() {
+            if (!infoActive) {
+                document.getElementById('info').style.display = 'block';
+                infoActive = true;
+            } else if (infoActive) {
+                document.getElementById('info').style.display = 'none';
+                infoActive = false;
+            }
+        }
+
+        function clickTaco() {
+            if (clickTacoTimer == 0) {
+                money += (Math.round(10000 * moneyValue) / 100) * 5;
+                clickTacoTimer = 500;
+                console.log('Click!');
+            }
+        }
+    </script><br>
+    <button onclick="cheese()" id="cheese" class="upgrades">
+        Cheese: Increase Speed<br><img src="money.png" height="12pt" />10
+    </button>
+    <button onclick="lettuce()" id="lettuce" class="upgrades">
+        Lettuce: Increase Size <span title="Size upgrades are the same as Value upgrades in their effect.">[ ?
+            ]</span><br>
+        <img src="money.png" height="12pt" />15
+    </button>
+    <button onclick="sourCream()" id="sourCream" class="upgrades">
+        Sour Cream: Increase Speed<br><img src="money.png" height="12pt" />20
+    </button>
+    <button onclick="meat()" id="meat" class="upgrades">
+        Taco Meat: Double Value<br><img src="money.png" height="12pt" />2500
+    </button><br><br>
+    <button onclick="tacoYumminess()" id="tacoYumminess" class="upgrades">
+        Taco Yumminess: Increase Diamond Speed by 1%
+    </button>
+    <button onclick="tomatoes()" id="tomatoes" class="upgrades">
+        Tomatoes: Increase Earnings by 10%
+    </button>
+    <br><br>
+    <button onclick="evolve()" id="evolveButton" class="gray">Evolve (E)</button><br>
+    <button onclick="credits()" class="gray">Credits</button>
+    <button onclick="info()" class="gray">Info</button>
+    <div id="credits">
+        <h1>Credits:</h1>
+        <h2>
+            Lead Dev:
+        </h2>
+        <h3>Brandon Robertson</h3>
+        <h2>
+            Art designer:
+        </h2>
+        <h3>Emily Robertson</h3>
+        <h2>Idea from Emily Robertson</h2>
+    </div>
+    <div id="info">
+        <h1>Info:</h1>
+        Click the buttons to upgrade your Taco.
+        <br>Every 5 seconds you can click the Taco to earn 5 seconds of earnings.
+        <br>Version: 1.1 Beta
+    </div>
+</body>
+
+</html>
