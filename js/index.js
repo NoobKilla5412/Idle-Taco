@@ -235,7 +235,6 @@ function animate() {
   if (keys && keys[keyEvolve]) {
     evolve()
   }
-
 }
 
 // let creditsActive = false
