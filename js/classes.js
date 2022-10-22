@@ -67,7 +67,7 @@ class Upgrade {
     }
   }
   /**
-   * Change the color to green if you can buy it
+   * Update the color to green if you can buy it
    */
   color() {
     if (this.type == 'money') {
@@ -85,7 +85,7 @@ class Upgrade {
     }
   }
   /**
-   * Change the text on the button
+   * Update the text on the button
    */
   message() {
     if (this.num != this.max) {
