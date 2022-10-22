@@ -1,7 +1,7 @@
 /**
- * capitalize the first letter of ``string``.
+ * Converts the first alphabetic character in a string to uppercase.
  * @param {*} string String to capitalize
- * @returns string with first letter capitalized
+ * @returns String with first letter capitalized
  */
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
