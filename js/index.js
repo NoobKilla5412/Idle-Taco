@@ -1,39 +1,5 @@
-let version = '1.6.1'
-document.getElementById('version').innerHTML = 'Version: ' + version
-document.querySelector('title').innerHTML = 'Taco Game v' + version
-let multiplier = 10
-let keys = []
-
-let frameNo = 0
-let clickTacoTimer = 0
-let money = 0
-let diamonds = 0
-let moneyRate = 1
-let displayMoneyRate = 100
-let diamondRate = 0.005
-let moneyValue = 0.05
-let diamondValue = 0.0005
-let evolveNum = 0
-let moneyPerSecNextEvolve
-let musicActive = false
-
-let keyCheese = '1'
-let keyLettuce = '2'
-let keySourCream = '3'
-let keyMeat = '4'
-let keyAvocadoes = '5'
-let keySalsa = '6'
-let keyTacoYumminess = 'n'
-let keyTomatoes = 'm'
-let keyEvolve = 'e'
-
-
-let clickSound = new Audio('sound/click.wav')
-let clickUpgrade = new Audio('sound/upgradeClick.wav')
-let backgroundMusic
-
-
-let buttons = {};
+document.getElementById('version').innerHTML = 'Version: ' + version;
+document.querySelector('title').innerHTML = 'Taco Game v' + version;
 if (evolveNum == 0) multiplier = 7 * (2 ** evolveNum + 1);
 else if (evolveNum > 0) multiplier = 7 * (2 ** evolveNum);
 
