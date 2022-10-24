@@ -1,5 +1,5 @@
-document.getElementById('version').innerHTML = 'Version: ' + version;
-document.querySelector('title').innerHTML = 'Taco Game v' + version;
+document.getElementById('version').innerHTML = `Version: ${version} Idle Mode`;
+document.querySelector('title').innerHTML = `Idle Taco v${version}`;
 if (evolveNum == 0) multiplier = 7 * (2 ** evolveNum + 1);
 else if (evolveNum > 0) multiplier = 7 * (2 ** evolveNum);
 
@@ -83,12 +83,8 @@ function animate() {
 
   document.getElementById('evolve').innerHTML = 'Evolve: <b>' + toValues(evolveNum) + '</b>'
 
-  if (everyInterval(moneyRate)) {
-    money += moneyValue
-  }
-  if (everyInterval(diamondRate)) {
-    diamonds += diamondValue
-  }
+  money += moneyValue
+  diamonds += diamondValue
 
   if (keys && keys[keyCheese]) {
     cheese.upgrade()

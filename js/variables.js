@@ -1,4 +1,4 @@
-let version = '1.6.1';
+let version = '1.7';
 let multiplier = 10;
 let keys = [];
 let frameNo = 0;
