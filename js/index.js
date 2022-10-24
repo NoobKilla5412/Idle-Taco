@@ -21,7 +21,7 @@ function animate() {
   //   backgroundMusic.pause();
   //   backgroundMusic.currentTime = 0;
   // }
-  moneyPerSecNextEvolve = (2 ** (evolveNum + 2)) * 1000 * 1.5
+  moneyPerSecNextEvolve = (2 ** (evolveNum + 2)) * 1000 * 2;
   if (evolveNum == 0) multiplier = 7 * (2 ** evolveNum + 1)
   else if (evolveNum > 0) multiplier = 7 * (2 ** evolveNum)
   buttons = {

@@ -42,21 +42,21 @@ function evolve() {
  */
 function newEvolve() {
   if (displayMoneyRate >= moneyPerSecNextEvolve) {
-    multiplier = 7 * (2 ** evolveNum + 2)
+    multiplier = 7 * (2 ** evolveNum + 2);
 
-    moneyPerSecNextEvolve = (2 ** (evolveNum + 2)) * 1000 * 1.5
+    moneyPerSecNextEvolve = (2 ** (evolveNum + 2)) * 1000 * 1.5;
 
-    money = 0
-    frameNo = 0
+    money = 0;
+    frameNo = 0;
 
-    evolveNum++
-    clickSound.play()
-    cheese.max += 5
-    lettuce.max += 5
-    sourCream.max += 5
-    tacoYumminess.max += 2
-    tomatoes.max += 2
-    resetValues()
+    evolveNum++;
+    clickSound.play();
+    cheese.max += 5;
+    lettuce.max += 5;
+    sourCream.max += 5;
+    tacoYumminess.max += 2;
+    tomatoes.max += 2;
+    resetValues();
   }
 }
 /**
