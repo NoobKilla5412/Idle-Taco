@@ -152,11 +152,11 @@ function load() {
     if (offlineTime < 7200000) {
       money += offlineFrames * moneyValue;
       diamonds += offlineFrames * diamondValue;
-      alert(`While you were away, you earned\n$${toValuesExt(offlineFrames * moneyValue)}\n💎${toValuesExt(offlineFrames * diamondValue)}`);
+      alert(`While you were away for ${Math.floor(offlineTime / 1000 / 60 / 60) + 'h '}${Math.floor(offlineTime / 1000 / 60) % 60 + 'm '}${Math.floor(offlineTime / 1000) % 60 + 's'}, you earned\n$${toValuesExt(offlineFrames * moneyValue)}\n💎${toValuesExt(offlineFrames * diamondValue)}`);
     } else {
       money += 720000 * moneyValue;
       diamonds += 720000 * diamondValue;
-      alert(`While you were away, you earned $${toValuesExt(720000 * moneyValue)} and 💎${toValuesExt(720000 * diamondValue)}`);
+      alert(`While you were away for 2h, you earned \n$${toValuesExt(720000 * moneyValue)}\n💎${toValuesExt(720000 * diamondValue)}`);
     }
   }
   clickSound.play();

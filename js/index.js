@@ -21,7 +21,7 @@ function animate() {
   //   backgroundMusic.pause();
   //   backgroundMusic.currentTime = 0;
   // }
-  moneyPerSecNextEvolve = (2 ** (evolveNum + 2)) * 1000 * 2;
+  moneyPerSecNextEvolve = (2 ** (evolveNum + 3)) * 1000 * 2;
   if (evolveNum == 0) multiplier = 7 * (2 ** evolveNum + 1)
   else if (evolveNum > 0) multiplier = 7 * (2 ** evolveNum)
   buttons = {
@@ -58,8 +58,8 @@ function animate() {
     moneyValue = (cheese.total / 100 + 1) * (lettuce.total / 100 + 1) * (sourCream.total / 100 + 1) * meat.total * (tomatoes.total / 100 + 1) * (avocados.total / 100 + 1) * salsa.total
     diamondValue = (tacoYumminess.total / 100 + 1) - 0.7
   } else {
-    moneyValue = (2 ** evolveNum + 2) * (cheese.total / 100 + 1) * (lettuce.total / 100 + 1) * (sourCream.total / 100 + 1) * meat.total * (tomatoes.total / 100 + 1) * (avocados.total / 100 + 1) * salsa.total
-    diamondValue = (2 ** evolveNum + 2) * (tacoYumminess.total / 100 + 1)
+    moneyValue = (2 ** evolveNum + 1) * (cheese.total / 100 + 1) * (lettuce.total / 100 + 1) * (sourCream.total / 100 + 1) * meat.total * (tomatoes.total / 100 + 1) * (avocados.total / 100 + 1) * salsa.total;
+    diamondValue = (2 ** evolveNum + 1) * (tacoYumminess.total / 100 + 1);
   }
   upgrades.forEach((upgrade) => {
     upgrade.color()
