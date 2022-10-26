@@ -69,10 +69,11 @@ function startGame() {
   document.getElementById('save').style.display = 'inline'
   document.getElementById('exit').style.display = 'inline'
   document.getElementById('evolveButton').style.display = 'inline'
+  document.getElementById('maxUpgradesButton').style.display = 'inline';
   for (let i = 0; i < upgrades.length + diamondUpgrades.length; i++) {
-    document.getElementsByClassName('upgrades')[i].style.display = 'inline'
+    document.getElementsByClassName('upgrades')[i].style.display = 'inline';
   }
-  setInterval(animate, 10)
+  interval = setInterval(main, 10);
 
   window.addEventListener('keydown', function (e) {
     keys = (keys || [])
@@ -81,8 +82,8 @@ function startGame() {
   window.addEventListener('keyup', function (e) {
     keys[e.key] = false
   })
-  setInterval(save, 2500)
-  console.log('Loaded')
+  saveInterval = setInterval(save, 2500);
+  console.log('Loaded');
 }
 /**
  * Every interval
@@ -175,5 +176,14 @@ function clickTaco() {
     money += (Math.round(10000 * moneyValue) / 100) * 5
     clickTacoTimer = 500
     clickSound.play()
+  }
+}
+
+function toggleMaxUpgrades() {
+  if (interval) {
+    if (!maxUpgrades)
+      maxUpgrades = true;
+    else
+      maxUpgrades = false;
   }
 }

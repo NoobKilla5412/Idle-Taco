@@ -80,5 +80,5 @@ let tomatoes = new Upgrade({
   totalUp: 10,
   costUp: 1.3
 });
-let upgrades = [cheese, lettuce, sourCream, meat, avocados, salsa];
-let diamondUpgrades = [tacoYumminess, tomatoes];
+var upgrades = [cheese, lettuce, sourCream, meat, avocados, salsa];
+var diamondUpgrades = [tacoYumminess, tomatoes];

@@ -17,7 +17,8 @@
 		#stats,
 		#save,
 		#exit,
-		#evolveButton {
+		#evolveButton,
+		#maxUpgradesButton {
 			display: none;
 		}
 
@@ -106,7 +107,8 @@
 	<div id="diamondUpgrades"></div>
 	<br>
 	<br><br>
-	<button onclick="evolve()" id="evolveButton" class="gray">Evolve (E)</button>
+	<button onclick="evolve();" id="evolveButton" class="gray">Evolve (E)</button>
+	<button onclick="toggleMaxUpgrades();" class="green" id="maxUpgradesButton">1x</button>
 	<!-- <button onclick="diamondToMoney()" class="gray">💎10% to <img src="money.svg" height="12pt" />5 x 💎10%</button> -->
 	<br><br>
 	<button onclick="info();clickSound.play();" class="gray">Info</button>
@@ -130,6 +132,7 @@
 	<script src="js/functions.js"></script>
 	<script src="js/save.js"></script>
 	<script src="js/toValues.js"></script>
+	<script src="js/main.js"></script>
 	<script src="js/index.js"></script>
 </body>
 

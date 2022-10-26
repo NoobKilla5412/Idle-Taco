@@ -23,46 +23,110 @@ class Upgrade {
    * Upgrade ``this``
    */
   upgrade() {
-    if (this.type == 'money') {
-      switch (this.action) {
-        case '+':
-          if (money >= Math.floor(this.cost) && this.num != this.max) {
-            money -= Math.floor(this.cost)
-            this.cost *= this.costUp
-            this.num++
-            this.total += this.totalUp
-            clickUpgrade.play()
-          }
-          break
-        case '*':
-          if (money >= Math.floor(this.cost) && this.num != this.max) {
-            money -= Math.floor(this.cost)
-            this.cost *= this.costUp
-            this.num++
-            this.total *= this.totalUp
-            clickUpgrade.play()
-          }
+    if (!maxUpgrades) {
+      if (this.type == 'money') {
+        switch (this.action) {
+          case '+':
+            if (money >= Math.floor(this.cost) && this.num != this.max) {
+              money -= Math.floor(this.cost)
+              this.cost *= this.costUp
+              this.num++
+              this.total += this.totalUp
+              clickUpgrade.play()
+            }
+            break
+          case '*':
+            if (money >= Math.floor(this.cost) && this.num != this.max) {
+              money -= Math.floor(this.cost)
+              this.cost *= this.costUp
+              this.num++
+              this.total *= this.totalUp
+              clickUpgrade.play()
+            }
+        }
+      } else if (this.type == 'diamond') {
+        switch (this.action) {
+          case '+':
+            if (diamonds >= Math.floor(this.cost) && this.num != this.max) {
+              diamonds -= Math.floor(this.cost)
+              this.cost *= this.costUp
+              this.num++
+              this.total += this.totalUp
+              clickUpgrade.play()
+            }
+            break
+          case '*':
+            if (diamonds >= Math.floor(this.cost) && this.num != this.max) {
+              diamonds -= Math.floor(this.cost)
+              this.cost *= this.costUp
+              this.num++
+              this.total *= this.totalUp
+              clickUpgrade.play()
+            }
+            break
+        }
       }
-    } else if (this.type == 'diamond') {
-      switch (this.action) {
-        case '+':
-          if (diamonds >= Math.floor(this.cost) && this.num != this.max) {
-            diamonds -= Math.floor(this.cost)
-            this.cost *= this.costUp
-            this.num++
-            this.total += this.totalUp
-            clickUpgrade.play()
-          }
-          break
-        case '*':
-          if (diamonds >= Math.floor(this.cost) && this.num != this.max) {
-            diamonds -= Math.floor(this.cost)
-            this.cost *= this.costUp
-            this.num++
-            this.total *= this.totalUp
-            clickUpgrade.play()
-          }
-          break
+    } else {
+      if (this.type == 'money') {
+        switch (this.action) {
+          case '+':
+            do {
+              if (money >= Math.floor(this.cost) && this.num != this.max) {
+                money -= Math.floor(this.cost);
+                this.cost *= this.costUp;
+                this.num++;
+                this.total += this.totalUp;
+              }
+            } while (money >= Math.floor(this.cost) && this.num != this.max);
+            clickUpgrade.play();
+
+            // if (money >= Math.floor(this.cost) && this.num != this.max) {
+            //   money -= Math.floor(this.cost)
+            //   this.cost *= this.costUp
+            //   this.num++
+            //   this.total += this.totalUp
+            //   clickUpgrade.play()
+            // }
+            break;
+          case '*':
+            do {
+              if (money >= Math.floor(this.cost) && this.num != this.max) {
+                money -= Math.floor(this.cost)
+                this.cost *= this.costUp
+                this.num++
+                this.total *= this.totalUp
+              }
+            } while (money >= Math.floor(this.cost) && this.num != this.max);
+
+            clickUpgrade.play();
+        }
+      } else if (this.type == 'diamond') {
+        switch (this.action) {
+          case '+':
+            do {
+              if (diamonds >= Math.floor(this.cost) && this.num != this.max) {
+                diamonds -= Math.floor(this.cost)
+                this.cost *= this.costUp
+                this.num++
+                this.total += this.totalUp
+              }
+            } while (diamonds >= Math.floor(this.cost) && this.num != this.max);
+
+            clickUpgrade.play();
+            break;
+          case '*':
+            do {
+              if (diamonds >= Math.floor(this.cost) && this.num != this.max) {
+                diamonds -= Math.floor(this.cost)
+                this.cost *= this.costUp
+                this.num++
+                this.total *= this.totalUp
+              }
+            } while (diamonds >= Math.floor(this.cost) && this.num != this.max);
+
+            clickUpgrade.play();
+            break;
+        }
       }
     }
   }
